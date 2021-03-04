@@ -12,6 +12,12 @@ import math
 
 torch.set_num_threads(1)
 
+def epoch_time(start_time, end_time):
+    elapsed_time = end_time - start_time
+    elapsed_mins = int(elapsed_time / 60)
+    elapsed_secs = int(elapsed_time - (elapsed_mins * 60))
+    return elapsed_mins, elapsed_secs
+
 def test_target(loader, model):
     with torch.no_grad():
         start_test = True
@@ -235,8 +241,12 @@ if __name__ == '__main__':
 
     print('Starting training wowww')
     print(f'Device is {device}')
+
+    import time
+    start_time = time.time()
+
     for iter_num in range(1, args.max_iteration + 1):
-        if iter_num % 50 == 49:
+        if iter_num % 50 == 0:
             print(f'Completed {iter_num} iterations')
         
         my_fine_net.train(True)
@@ -339,10 +349,15 @@ if __name__ == '__main__':
                 train_total_loss / float(test_interval))
             )
 
+            end_time = time.time()
+            epoch_mins, epoch_secs = epoch_time(start_time, end_time)
+            print(f'Time: {epoch_mins}m {epoch_secs}s')
+
             train_fine_cross_loss = 0.0
             train_coarse_cross_loss = 0.0
             train_transfer_loss = 0.0
             train_entropy_loss_source = 0.0
             train_entropy_loss_target = 0.0
             train_total_loss = 0.0
+            start_time = time.time()
 
