@@ -134,7 +134,7 @@ if __name__ == '__main__':
     parser.add_argument('--lr', type=float, nargs='?', default=0.03, help="target dataset")
     parser.add_argument('--initial_smooth', type=float, nargs='?', default=0.9, help="target dataset")
     parser.add_argument('--final_smooth', type=float, nargs='?', default=0.1, help="target dataset")
-    parser.add_argument('--max_iteration', type=float, nargs='?', default=12500, help="target dataset")
+    parser.add_argument('--max_iteration', type=float, nargs='?', default=25000, help="target dataset")
     parser.add_argument('--smooth_stratege', type=str, nargs='?', default='e', help="smooth stratege")
 
     args = parser.parse_args()
@@ -348,6 +348,20 @@ if __name__ == '__main__':
                 train_entropy_loss_target / float(test_interval),
                 train_total_loss / float(test_interval))
             )
+
+            my_fine_net.cpu()
+            torch.save(my_fine_net, './my_fine_net.pth')
+            my_fine_net.to(device)
+
+            my_coarse_extractor.cpu()
+            torch.save(my_coarse_extractor, './my_coarse_extractor.pth')
+            my_coarse_extractor.to(device)
+
+            for i in range(num_coarse_cate_sel):
+                my_coarse_predictor[i].cpu()
+                torch.save(my_coarse_predictor[i], './my_coarse_predictor' + str(i))
+                my_coarse_predictor[i].to(device)
+
 
             end_time = time.time()
             epoch_mins, epoch_secs = epoch_time(start_time, end_time)
