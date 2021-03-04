@@ -349,19 +349,22 @@ if __name__ == '__main__':
                 train_total_loss / float(test_interval))
             )
 
+            print('Saving models')
+
             my_fine_net.cpu()
-            torch.save(my_fine_net, './my_fine_net.pth')
+            torch.save(my_fine_net, './my_fine_net' + '_' + str(iter_num) + '.pth')
             my_fine_net.to(device)
 
             my_coarse_extractor.cpu()
-            torch.save(my_coarse_extractor, './my_coarse_extractor.pth')
+            torch.save(my_coarse_extractor, './my_coarse_extractor' + '_' + str(iter_num) + '.pth')
             my_coarse_extractor.to(device)
 
             for i in range(num_coarse_cate_sel):
                 my_coarse_predictor[i].cpu()
-                torch.save(my_coarse_predictor[i], './my_coarse_predictor' + str(i))
+                torch.save(my_coarse_predictor[i], './my_coarse_predictor' + '_' + str(i) + '_' + str(iter_num) + '.pth')
                 my_coarse_predictor[i].to(device)
 
+            print('Saved models')
 
             end_time = time.time()
             epoch_mins, epoch_secs = epoch_time(start_time, end_time)
